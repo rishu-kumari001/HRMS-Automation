@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Management - HRMS</title>
+</head>
+
+<body>
+
+    <h1>Employee Management</h1>
+
+    <label>Employee Name</label>
+    <input id="employeeName" type="text" required>
+
+    <label>Email</label>
+    <input id="employeeEmail" type="email" required>
+
+    <label>Department</label>
+
+    <select id="employeeDepartment">
+        <option value="">Select Department</option>
+        <option value="IT">IT</option>
+        <option value="HR">HR</option>
+        <option value="Finance">Finance</option>
+    </select>
+
+    <label>Role</label>
+    <input id="employeeRole" type="text" required>
+
+    <button id="addEmployeeButton">
+        Add Employee
+    </button>
+
+    <p id="successMessage"></p>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody id="employeeTableBody"></tbody>
+
+    </table>
+
+    <script>
+
+        let editingRow = null;
+
+        document
+            .getElementById('addEmployeeButton')
+            .addEventListener('click', function () {
+
+                const name =
+                    document.getElementById('employeeName').value;
+
+                const email =
+                    document.getElementById('employeeEmail').value;
+
+                const department =
+                    document.getElementById('employeeDepartment').value;
+
+                const role =
+                    document.getElementById('employeeRole').value;
+
+                if (!name || !email || !department || !role) {
+                    return;
+                }
+                
+                const existingRows =
+    document.querySelectorAll('#employeeTableBody tr');
+
+for (const existingRow of existingRows) {
+
+    const existingEmail =
+        existingRow.cells[1].textContent;
+
+    if (existingEmail === email) {
+        document.getElementById(
+            'successMessage'
+        ).textContent =
+            'Employee already exists';
+
+        return;
+    }
+}
+
+                if (editingRow) {
+
+                    editingRow.cells[0].textContent = name;
+                    editingRow.cells[1].textContent = email;
+                    editingRow.cells[2].textContent = department;
+                    editingRow.cells[3].textContent = role;
+
+                    editingRow = null;
+
+                    document.getElementById(
+                        'addEmployeeButton'
+                    ).textContent = 'Add Employee';
+
+                    document.getElementById(
+                        'successMessage'
+                    ).textContent =
+                        'Employee updated successfully';
+
+                } else {
+
+                    const row =
+                        document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${name}</td>
+                        <td>${email}</td>
+                        <td>${department}</td>
+                        <td>${role}</td>
+                        <td>
+                            <button class="editButton">
+                                Edit
+                            </button>
+
+                            <button class="deleteButton">
+                                Delete
+                            </button>
+                        </td>
+                    `;
+
+                    document
+                        .getElementById('employeeTableBody')
+                        .appendChild(row);
+
+                    document.getElementById(
+                        'successMessage'
+                    ).textContent =
+                        'Employee added successfully';
+
+                    row.querySelector('.editButton')
+                        .addEventListener('click', function () {
+
+                            document.getElementById(
+                                'employeeName'
+                            ).value = row.cells[0].textContent;
+
+                            document.getElementById(
+                                'employeeEmail'
+                            ).value = row.cells[1].textContent;
+
+                            document.getElementById(
+                                'employeeDepartment'
+                            ).value = row.cells[2].textContent;
+
+                            document.getElementById(
+                                'employeeRole'
+                            ).value = row.cells[3].textContent;
+
+                            editingRow = row;
+
+                            document.getElementById(
+                                'addEmployeeButton'
+                            ).textContent = 'Update Employee';
+                        });
+
+                    row.querySelector('.deleteButton')
+                        .addEventListener('click', function () {
+
+                            row.remove();
+
+                            document.getElementById(
+                                'successMessage'
+                            ).textContent =
+                                'Employee deleted successfully';
+                        });
+                }
+
+                if (!editingRow) {
+                    document.getElementById(
+                        'employeeName'
+                    ).value = '';
+
+                    document.getElementById(
+                        'employeeEmail'
+                    ).value = '';
+
+                    document.getElementById(
+                        'employeeDepartment'
+                    ).value = '';
+
+                    document.getElementById(
+                        'employeeRole'
+                    ).value = '';
+                }
+
+            });
+
+    </script>
+
+</body>
+</html>

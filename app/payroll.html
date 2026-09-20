@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payroll Management - HRMS</title>
+</head>
+<body>
+
+    <h1>Payroll Management</h1>
+
+    <label>Employee Name</label>
+    <input id="payrollEmployee" type="text">
+
+    <label>Month</label>
+    <input id="payrollMonth" type="month">
+
+    <label>Basic Salary</label>
+    <input id="basicSalary" type="number">
+
+    <label>Allowance</label>
+    <input id="allowance" type="number">
+
+    <label>Deduction</label>
+    <input id="deduction" type="number">
+
+    <button id="generatePayrollButton">
+        Generate Payroll
+    </button>
+
+    <p id="payrollSuccess"></p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Month</th>
+                <th>Basic Salary</th>
+                <th>Allowance</th>
+                <th>Deduction</th>
+                <th>Net Salary</th>
+            </tr>
+        </thead>
+
+        <tbody id="payrollTableBody"></tbody>
+    </table>
+
+    <script>
+        document
+            .getElementById('generatePayrollButton')
+            .addEventListener('click', function () {
+
+                const employee =
+                    document.getElementById('payrollEmployee').value;
+
+                const month =
+                    document.getElementById('payrollMonth').value;
+
+                const basicSalary =
+                    Number(document.getElementById('basicSalary').value);
+
+                const allowance =
+                    Number(document.getElementById('allowance').value);
+
+                const deduction =
+                    Number(document.getElementById('deduction').value);
+
+                if (!employee || !month) {
+                    return;
+                }
+
+                const netSalary =
+                    basicSalary + allowance - deduction;
+
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${employee}</td>
+                    <td>${month}</td>
+                    <td>${basicSalary}</td>
+                    <td>${allowance}</td>
+                    <td>${deduction}</td>
+                    <td>${netSalary}</td>
+                `;
+
+                document
+                    .getElementById('payrollTableBody')
+                    .appendChild(row);
+
+                document
+                    .getElementById('payrollSuccess')
+                    .textContent =
+                    'Payroll generated successfully';
+            });
+    </script>
+
+</body>
+</html>

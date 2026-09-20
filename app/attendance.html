@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance - HRMS</title>
+</head>
+<body>
+
+    <h1>Attendance Management</h1>
+
+    <label>Employee Name</label>
+    <input id="attendanceEmployee" type="text">
+
+    <label>Date</label>
+    <input id="attendanceDate" type="date">
+
+    <label>Status</label>
+    <select id="attendanceStatus">
+        <option value="">Select Status</option>
+        <option value="Present">Present</option>
+        <option value="Absent">Absent</option>
+        <option value="Leave">Leave</option>
+    </select>
+
+    <button id="markAttendanceButton">Mark Attendance</button>
+
+    <p id="attendanceSuccess"></p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="attendanceTableBody">
+        </tbody>
+    </table>
+
+    <script>
+        document
+            .getElementById('markAttendanceButton')
+            .addEventListener('click', function () {
+
+                const employee =
+                    document.getElementById('attendanceEmployee').value;
+
+                const date =
+                    document.getElementById('attendanceDate').value;
+
+                const status =
+                    document.getElementById('attendanceStatus').value;
+
+                if (!employee || !date || !status) {
+                    return;
+                }
+
+                const row =
+                    document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${employee}</td>
+                    <td>${date}</td>
+                    <td>${status}</td>
+                `;
+
+                document
+                    .getElementById('attendanceTableBody')
+                    .appendChild(row);
+
+                document
+                    .getElementById('attendanceSuccess')
+                    .textContent = 'Attendance marked successfully';
+            });
+    </script>
+
+</body>
+</html>

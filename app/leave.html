@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leave Management - HRMS</title>
+</head>
+<body>
+
+    <h1>Leave Management</h1>
+
+    <label>Employee Name</label>
+    <input id="leaveEmployee" type="text">
+
+    <label>Leave Type</label>
+    <select id="leaveType">
+        <option value="">Select Leave Type</option>
+        <option value="Casual Leave">Casual Leave</option>
+        <option value="Sick Leave">Sick Leave</option>
+        <option value="Earned Leave">Earned Leave</option>
+    </select>
+
+    <label>From Date</label>
+    <input id="fromDate" type="date">
+
+    <label>To Date</label>
+    <input id="toDate" type="date">
+
+    <button id="applyLeaveButton">Apply Leave</button>
+
+    <p id="leaveSuccess"></p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+        </thead>
+
+        <tbody id="leaveTableBody"></tbody>
+    </table>
+
+    <script>
+        document
+            .getElementById('applyLeaveButton')
+            .addEventListener('click', function () {
+
+                const employee =
+                    document.getElementById('leaveEmployee').value;
+
+                const leaveType =
+                    document.getElementById('leaveType').value;
+
+                const fromDate =
+                    document.getElementById('fromDate').value;
+
+                const toDate =
+                    document.getElementById('toDate').value;
+
+                if (!employee || !leaveType || !fromDate || !toDate) {
+                    return;
+                }
+
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${employee}</td>
+                    <td>${leaveType}</td>
+                    <td>${fromDate}</td>
+                    <td>${toDate}</td>
+                `;
+
+                document
+                    .getElementById('leaveTableBody')
+                    .appendChild(row);
+
+                document
+                    .getElementById('leaveSuccess')
+                    .textContent =
+                    'Leave applied successfully';
+            });
+    </script>
+
+</body>
+</html>
