@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Employee Management - HRMS</title>
 </head>
@@ -68,28 +69,37 @@
                 const role =
                     document.getElementById('employeeRole').value;
 
+                // Required field validation
                 if (!name || !email || !department || !role) {
                     return;
                 }
-                
+
+                // Duplicate email validation
                 const existingRows =
-    document.querySelectorAll('#employeeTableBody tr');
+                    document.querySelectorAll('#employeeTableBody tr');
 
-for (const existingRow of existingRows) {
+                for (const existingRow of existingRows) {
 
-    const existingEmail =
-        existingRow.cells[1].textContent;
+                    // Ignore the row currently being edited
+                    if (existingRow === editingRow) {
+                        continue;
+                    }
 
-    if (existingEmail === email) {
-        document.getElementById(
-            'successMessage'
-        ).textContent =
-            'Employee already exists';
+                    const existingEmail =
+                        existingRow.cells[1].textContent;
 
-        return;
-    }
-}
+                    if (existingEmail === email) {
 
+                        document.getElementById(
+                            'successMessage'
+                        ).textContent =
+                            'Employee already exists';
+
+                        return;
+                    }
+                }
+
+                // Update existing employee
                 if (editingRow) {
 
                     editingRow.cells[0].textContent = name;
@@ -108,7 +118,10 @@ for (const existingRow of existingRows) {
                     ).textContent =
                         'Employee updated successfully';
 
-                } else {
+                }
+
+                // Add new employee
+                else {
 
                     const row =
                         document.createElement('tr');
@@ -119,6 +132,7 @@ for (const existingRow of existingRows) {
                         <td>${department}</td>
                         <td>${role}</td>
                         <td>
+
                             <button class="editButton">
                                 Edit
                             </button>
@@ -126,6 +140,7 @@ for (const existingRow of existingRows) {
                             <button class="deleteButton">
                                 Delete
                             </button>
+
                         </td>
                     `;
 
@@ -138,32 +153,39 @@ for (const existingRow of existingRows) {
                     ).textContent =
                         'Employee added successfully';
 
+                    // Edit employee
                     row.querySelector('.editButton')
                         .addEventListener('click', function () {
 
                             document.getElementById(
                                 'employeeName'
-                            ).value = row.cells[0].textContent;
+                            ).value =
+                                row.cells[0].textContent;
 
                             document.getElementById(
                                 'employeeEmail'
-                            ).value = row.cells[1].textContent;
+                            ).value =
+                                row.cells[1].textContent;
 
                             document.getElementById(
                                 'employeeDepartment'
-                            ).value = row.cells[2].textContent;
+                            ).value =
+                                row.cells[2].textContent;
 
                             document.getElementById(
                                 'employeeRole'
-                            ).value = row.cells[3].textContent;
+                            ).value =
+                                row.cells[3].textContent;
 
                             editingRow = row;
 
                             document.getElementById(
                                 'addEmployeeButton'
-                            ).textContent = 'Update Employee';
+                            ).textContent =
+                                'Update Employee';
                         });
 
+                    // Delete employee
                     row.querySelector('.deleteButton')
                         .addEventListener('click', function () {
 
@@ -176,7 +198,9 @@ for (const existingRow of existingRows) {
                         });
                 }
 
+                // Clear form after adding
                 if (!editingRow) {
+
                     document.getElementById(
                         'employeeName'
                     ).value = '';
@@ -199,4 +223,5 @@ for (const existingRow of existingRows) {
     </script>
 
 </body>
+
 </html>

@@ -1,114 +1,155 @@
 import { test, expect } from '../../fixtures/employeeFixture.js';
 import { employeeData } from '../../test-data/employees.js';
 
-test('HRMS - Add Employee', async ({ employeePage }) => {
 
+test('@smoke HRMS - Add Employee', async ({ employeePage }) => {
 
     await employeePage.open();
 
     await employeePage.addEmployee(
-    employeeData.validEmployee.name,
-    employeeData.validEmployee.email,
-    employeeData.validEmployee.department,
-    employeeData.validEmployee.role
-);
+        employeeData.validEmployee.name,
+        employeeData.validEmployee.email,
+        employeeData.validEmployee.department,
+        employeeData.validEmployee.role
+    );
 
     await expect(
         employeePage.successMessage
     ).toHaveText('Employee added successfully');
 
-    const row =
-        await employeePage.getEmployeeRow('Rishu');
-
-    await expect(row).toContainText('rishu@gmail.com');
-    await expect(row).toContainText('QA Engineer');
-});
-
-test('HRMS - Edit Employee', async ({ employeePage }) => {
-
-    await employeePage.open();
-
-    await employeePage.addEmployee(
-        'Rishu',
-        'rishu@gmail.com',
-        'IT',
-        'QA Engineer'
+    const row = await employeePage.getEmployeeRow(
+        employeeData.validEmployee.name
     );
 
-    await employeePage.editEmployee('Rishu');
-
-    await expect(
-        employeePage.employeeName
-    ).toHaveValue('Rishu');
-});
-
-test('HRMS - Delete Employee', async ({ employeePage }) => {
-
-    await employeePage.open();
-
-    await employeePage.addEmployee(
-        'Rishu',
-        'rishu@gmail.com',
-        'IT',
-        'QA Engineer'
+    await expect(row).toContainText(
+        employeeData.validEmployee.email
     );
 
-    const row =
-        await employeePage.getEmployeeRow('Rishu');
-
-    await expect(row).toBeVisible();
-
-    await employeePage.deleteEmployee('Rishu');
-
-    await expect(row).toHaveCount(0);
+    await expect(row).toContainText(
+        employeeData.validEmployee.role
+    );
 });
 
-test('HRMS - Employee Required Field Validation', async ({ employeePage }) => {
+
+test('@regression HRMS - Edit Employee', async ({ employeePage }) => {
 
     await employeePage.open();
 
     await employeePage.addEmployee(
-        '',
-        '',
-        '',
-        ''
+        employeeData.validEmployee.name,
+        employeeData.validEmployee.email,
+        employeeData.validEmployee.department,
+        employeeData.validEmployee.role
+    );
+
+    await employeePage.editEmployee(
+        employeeData.validEmployee.name
     );
 
     await expect(
-        employeePage.employeeName
-    ).toBeVisible();
+        employeePage.addEmployeeButton
+    ).toHaveText('Update Employee');
 
-    const rows =
-        employeePage.employeeTableBody.locator('tr');
-
-    await expect(rows).toHaveCount(0);
-});
-
-test('HRMS - Duplicate Employee Validation', async ({ employeePage }) => {
-
-    await employeePage.open();
-
-    await employeePage.addEmployee(
-        'Rishu',
-        'rishu@gmail.com',
-        'IT',
-        'QA Engineer'
-    );
-
-    await employeePage.addEmployee(
-        'Rishu',
-        'rishu@gmail.com',
-        'IT',
-        'QA Engineer'
+    await employeePage.updateEmployee(
+        employeeData.editEmployee.name,
+        employeeData.editEmployee.email,
+        employeeData.editEmployee.department,
+        employeeData.editEmployee.role
     );
 
     await expect(
         employeePage.successMessage
-    ).toHaveText('Employee already exists');
+    ).toHaveText('Employee updated successfully');
 
-    const rows =
-        employeePage.employeeTableBody.locator('tr');
+    const row = await employeePage.getEmployeeRow(
+        employeeData.editEmployee.name
+    );
 
-    await expect(rows).toHaveCount(1);
+    await expect(row).toBeVisible();
+
+    await expect(row).toContainText(
+        employeeData.editEmployee.email
+    );
+
+    await expect(row).toContainText(
+        employeeData.editEmployee.role
+    );
 });
 
+
+test('@regression HRMS - Delete Employee', async ({ employeePage }) => {
+
+    await employeePage.open();
+
+    await employeePage.addEmployee(
+        employeeData.validEmployee.name,
+        employeeData.validEmployee.email,
+        employeeData.validEmployee.department,
+        employeeData.validEmployee.role
+    );
+
+    const row = await employeePage.getEmployeeRow(
+        employeeData.validEmployee.name
+    );
+
+    await expect(row).toBeVisible();
+
+    await employeePage.deleteEmployee(
+        employeeData.validEmployee.name
+    );
+
+    await expect(row).toHaveCount(0);
+});
+
+
+test(
+    '@regression HRMS - Employee Required Field Validation',
+    async ({ employeePage }) => {
+
+        await employeePage.open();
+
+        await employeePage.addEmployee(
+            employeeData.invalidEmployee.name,
+            employeeData.invalidEmployee.email,
+            employeeData.invalidEmployee.department,
+            employeeData.invalidEmployee.role
+        );
+
+        const rows =
+            employeePage.employeeTableBody.locator('tr');
+
+        await expect(rows).toHaveCount(0);
+    }
+);
+
+
+test(
+    '@regression HRMS - Duplicate Employee Validation',
+    async ({ employeePage }) => {
+
+        await employeePage.open();
+
+        await employeePage.addEmployee(
+            employeeData.validEmployee.name,
+            employeeData.validEmployee.email,
+            employeeData.validEmployee.department,
+            employeeData.validEmployee.role
+        );
+
+        await employeePage.addEmployee(
+            employeeData.duplicateEmployee.name,
+            employeeData.duplicateEmployee.email,
+            employeeData.duplicateEmployee.department,
+            employeeData.duplicateEmployee.role
+        );
+
+        await expect(
+            employeePage.successMessage
+        ).toHaveText('Employee already exists');
+
+        const rows =
+            employeePage.employeeTableBody.locator('tr');
+
+        await expect(rows).toHaveCount(1);
+    }
+);
